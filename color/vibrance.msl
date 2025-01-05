@@ -22,4 +22,15 @@ float3 vibrance(float3 v, float vi) {
 }
 
 float4 vibrance(float4 v, float vi) { return float4( vibrance(v.rgb, vi), v.a); }
+
+
+half3 vibrance(half3 v, half3 vi) {
+    half max_v = mmax(v);
+    half min_v = mmin(v);
+    half sat = max_v - min_v;
+    half lum = luma(v);
+    return mix(half3(lum), v, 1.0 + (vi * 1.0 - (sign(vi) * sat)));
+}
+
+half4 vibrance(half4 v, half vi) { return half4( vibrance(v.rgb, vi), v.a); }
 #endif

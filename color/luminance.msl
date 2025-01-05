@@ -11,4 +11,7 @@ license:
 #define FNC_LUMINANCE
 float luminance(float3 linear) { return dot(linear, float3(0.21250175, 0.71537574, 0.07212251)); }
 float luminance(float4 linear) { return luminance( linear.rgb ); }
+
+half luminance(half3 linear) { return dot(linear, half3(0.21250175, 0.71537574, 0.07212251)); }
+half luminance(half4 linear) { return luminance( linear.rgb ); }
 #endif
