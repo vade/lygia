@@ -3,17 +3,22 @@ contributors: Patricio Gonzalez Vivo
 description: |
     Draws all the digits of a floating point number, useful for debugging.
     Requires high precision to work properly.
+    Note, think on improving the performance of this function using Freya Holmer approach https://gist.github.com/FreyaHolmer/71717be9f3030c1b0990d3ed1ae833e3
 use: digits(<float2> st, <float> value [, <float> nDecDigit])
 options:
     DIGITS_DECIMALS: number of decimals after the point, defaults to 2
-    DIGITS_SIZE: size of the font, defaults to float2(.025)
+    DIGITS_SIZE: size of the font, defaults to float2(.02, 0.02)
 license:
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Prosperity License - https://prosperitylicense.com/versions/3.0.0
     - Copyright (c) 2021 Patricio Gonzalez Vivo under Patron License - https://lygia.xyz/license
 */
 
 #ifndef DIGITS_SIZE
-#define DIGITS_SIZE float2(.025, .025)
+#define DIGITS_SIZE float2(.02, .02)
+#endif
+
+#ifndef DIGITS_VALUE_OFFSET
+#define DIGITS_VALUE_OFFSET float2(-6.0, 3.0)
 #endif
 
 #ifndef DIGITS_DECIMALS
@@ -28,7 +33,7 @@ float digits(in float2 st, in float value, in float nDecDigit) {
     float absValue = abs(value);
     float biggestDigitIndex = max(floor(log2(absValue) / log2(10.)), 0.);
 
-    float counter = floor(value);
+    float counter = floor(absValue);
     float nIntDigits = 0.;
     for (int i = 0; i < 9; i++) {
         counter = floor(counter*.1);
@@ -118,7 +123,77 @@ float digits(in float2 st, in float value, in float nDecDigit, in float nIntDigi
     return result; 
 }
 
+float digits(in float2 st, in int value) {
+    return digits(st, float(value), 0.0);
+}
+
 float digits(in float2 st, in float value) {
     return digits(st, value, (DIGITS_DECIMALS));
+}
+
+float digits(in float2 st, in float2 v) {
+    float rta = 0.0;
+    for (int i = 0; i < 2; i++) {
+        float2 pos = st + float2(float(i), 0.0) * DIGITS_SIZE * DIGITS_VALUE_OFFSET;
+        float value = i == 0 ? v.x : v.y;
+        rta += digits( pos, value );
+    }
+    return rta;
+}
+
+float digits(in float2 st, in float3 v) {
+    float rta = 0.0;
+    for (int i = 0; i < 3; i++) {
+        float2 pos = st + float2(float(i), 0.0) * DIGITS_SIZE * DIGITS_VALUE_OFFSET;
+        float value = i == 0 ? v.x : i == 1 ? v.y : v.z;
+        rta += digits( pos, value );
+    }
+    return rta;
+}
+
+float digits(in float2 st, in float4 v) {
+    float rta = 0.0;
+    for (int i = 0; i < 4; i++) {
+        float2 pos = st + float2(float(i), 0.0) * DIGITS_SIZE * DIGITS_VALUE_OFFSET;
+        float value = i == 0 ? v.x : i == 1 ? v.y : i == 2 ? v.z : v.w;
+        rta += digits( pos, value );
+    }
+    return rta;
+}
+
+float digits(in float2 st, in float2x2 _matrix) {
+    float rta = 0.0;
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            float2 pos = st + float2(float(i), float(j)) * DIGITS_SIZE * DIGITS_VALUE_OFFSET - DIGITS_SIZE * float2(0.0, 3.0);
+            float value = _matrix[j][i];
+            rta += digits( pos, value );
+        }
+    }
+    return rta;
+}
+
+float digits(in float2 st, in float3x3 _matrix) {
+    float rta = 0.0;
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            float2 pos = st + float2(float(i), float(j)) * DIGITS_SIZE * DIGITS_VALUE_OFFSET - DIGITS_SIZE * float2(0.0, 6.0);
+            float value = _matrix[j][i];
+            rta += digits( pos, value );
+        }
+    }
+    return rta;
+}
+
+float digits(in float2 st, in float4x4 _matrix) {
+    float rta = 0.0;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            float2 pos = st + float2(float(i), float(j)) * DIGITS_SIZE * DIGITS_VALUE_OFFSET - DIGITS_SIZE * float2(0.0, 9.0);
+            float value = _matrix[j][i];
+            rta += digits( pos, value );
+        }
+    }
+    return rta;
 }
 #endif

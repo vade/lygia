@@ -3,7 +3,7 @@
 /*
 contributors: [Brad Larson, Ben Cochran, Hugues Lismonde, Keitaroh Kobayashi, Alaric Cole, Matthew Clark, Jacob Gundersen, Chris Williams.]
 description: Kuwahara image abstraction, drawn from the work of Kyprianidis, et. al. in their publication "Anisotropic Kuwahara Filtering on the GPU" within the GPU Pro collection. This produces an oil-painting-like image, but it is extremely computationally expensive, so it can take seconds to render a frame on an iPad 2. This might be best used for still images.
-use: kuwahara(<SAMPLER_TYPE> texture, <vec2> st, <vec2> pixel)
+use: kuwahara(<SAMPLER_TYPE> texture, <vec2> st, <vec2> pixel, <float> radius)
 options:
     - KUWAHARA_TYPE: defaults to vec3
     - KUWAHARA_SAMPLER_FNC(TEX, UV): defaults to texture2D(tex, TEX, UV).rgb
@@ -23,45 +23,44 @@ options:
 #define FNC_KUWAHARA
 
 #ifdef TARGET_MOBILE
-KUWAHARA_TYPE kuwahara(in SAMPLER_TYPE tex, in vec2 st, in vec2 pixel, in int radius) {
+KUWAHARA_TYPE kuwahara(in SAMPLER_TYPE tex, in vec2 st, in vec2 pixel, in float radius) {
 
     #ifndef KUWAHARA_RADIUS
     #define KUWAHARA_RADIUS radius
     #endif
 
-    float n = float((KUWAHARA_RADIUS + 1) * (KUWAHARA_RADIUS + 1));
-    int i; int j;
+    float n = (KUWAHARA_RADIUS + 1.0) * (KUWAHARA_RADIUS + 1.0);
     KUWAHARA_TYPE m0 = KUWAHARA_TYPE(0.0); KUWAHARA_TYPE m1 = KUWAHARA_TYPE(0.0); KUWAHARA_TYPE m2 = KUWAHARA_TYPE(0.0); KUWAHARA_TYPE m3 = KUWAHARA_TYPE(0.0);
     KUWAHARA_TYPE s0 = KUWAHARA_TYPE(0.0); KUWAHARA_TYPE s1 = KUWAHARA_TYPE(0.0); KUWAHARA_TYPE s2 = KUWAHARA_TYPE(0.0); KUWAHARA_TYPE s3 = KUWAHARA_TYPE(0.0);
     KUWAHARA_TYPE rta = KUWAHARA_TYPE(0.0);
     KUWAHARA_TYPE c = KUWAHARA_TYPE(0.0);
 
-    for (j = -KUWAHARA_RADIUS; j <= 0; ++j)  {
-        for (i = -KUWAHARA_RADIUS; i <= 0; ++i)  {
+    for (float j = -KUWAHARA_RADIUS; j <= 0.0; ++j)  {
+        for (float i = -KUWAHARA_RADIUS; i <= 0.0; ++i)  {
             c = KUWAHARA_SAMPLER_FNC(tex, st + vec2(i,j) * pixel);
             m0 += c;
             s0 += c * c;
         }
     }
 
-    for (j = -KUWAHARA_RADIUS; j <= 0; ++j)  {
-        for (i = 0; i <= KUWAHARA_RADIUS; ++i)  {
+    for (float j = -KUWAHARA_RADIUS; j <= 0.0; ++j)  {
+        for (float i = 0.0; i <= KUWAHARA_RADIUS; ++i)  {
             c = KUWAHARA_SAMPLER_FNC(tex, st + vec2(i,j) * pixel);
             m1 += c;
             s1 += c * c;
         }
     }
 
-    for (j = 0; j <= KUWAHARA_RADIUS; ++j)  {
-        for (i = 0; i <= KUWAHARA_RADIUS; ++i)  {
+    for (float j = 0.0; j <= KUWAHARA_RADIUS; ++j)  {
+        for (float i = 0.0; i <= KUWAHARA_RADIUS; ++i)  {
             c = KUWAHARA_SAMPLER_FNC(tex, st + vec2(i,j) * pixel);
             m2 += c;
             s2 += c * c;
         }
     }
 
-    for (j = 0; j <= KUWAHARA_RADIUS; ++j)  {
-        for (i = -KUWAHARA_RADIUS; i <= 0; ++i)  {
+    for (float j = 0.0; j <= KUWAHARA_RADIUS; ++j)  {
+        for (float i = -KUWAHARA_RADIUS; i <= 0.0; ++i)  {
             c = KUWAHARA_SAMPLER_FNC(tex, st + vec2(i,j) * pixel);
             m3 += c;
             s3 += c * c;
@@ -110,38 +109,37 @@ KUWAHARA_TYPE kuwahara(in SAMPLER_TYPE tex, in vec2 st, in vec2 pixel, in int ra
 
 #else
 
-KUWAHARA_TYPE kuwahara(in SAMPLER_TYPE tex, in vec2 st, in vec2 pixel, in int radius) {
+KUWAHARA_TYPE kuwahara(in SAMPLER_TYPE tex, in vec2 st, in vec2 pixel, in float radius) {
 
     #ifndef KUWAHARA_RADIUS
 
     #if defined(PLATFORM_WEBGL)
-    #define KUWAHARA_RADIUS 20
-    float n = float((radius + 1) * (radius + 1));
+    #define KUWAHARA_RADIUS 20.0
+    float n = (radius + 1.0) * (radius + 1.0);
     #else
     #define KUWAHARA_RADIUS radius
-    float n = float((KUWAHARA_RADIUS + 1) * (KUWAHARA_RADIUS + 1));
+    float n = (KUWAHARA_RADIUS + 1.0) * (KUWAHARA_RADIUS + 1.0);
     #endif
 
     #else
-    float n = float((KUWAHARA_RADIUS + 1) * (KUWAHARA_RADIUS + 1));
+    float n = (KUWAHARA_RADIUS + 1.0) * (KUWAHARA_RADIUS + 1.0);
     #endif
 
-    int i; int j;
     KUWAHARA_TYPE m0 = KUWAHARA_TYPE(0.0); KUWAHARA_TYPE m1 = KUWAHARA_TYPE(0.0); KUWAHARA_TYPE m2 = KUWAHARA_TYPE(0.0); KUWAHARA_TYPE m3 = KUWAHARA_TYPE(0.0);
     KUWAHARA_TYPE s0 = KUWAHARA_TYPE(0.0); KUWAHARA_TYPE s1 = KUWAHARA_TYPE(0.0); KUWAHARA_TYPE s2 = KUWAHARA_TYPE(0.0); KUWAHARA_TYPE s3 = KUWAHARA_TYPE(0.0);
     KUWAHARA_TYPE rta = KUWAHARA_TYPE(0.0);
     KUWAHARA_TYPE c = KUWAHARA_TYPE(0.0);
     
-    for (j = -KUWAHARA_RADIUS; j <= 0; ++j)  { 
-        for (i = -KUWAHARA_RADIUS; i <= 0; ++i)  {
+    for (float j = -KUWAHARA_RADIUS; j <= 0.0; ++j)  { 
+        for (float i = -KUWAHARA_RADIUS; i <= 0.0; ++i)  {
             c = KUWAHARA_SAMPLER_FNC(tex, st + vec2(i,j) * pixel);
             m0 += c;
             s0 += c * c;
         }
     }
     
-    for (j = -KUWAHARA_RADIUS; j <= 0; ++j)  {
-        for (i = 0; i <= KUWAHARA_RADIUS; ++i)  {
+    for (float j = -KUWAHARA_RADIUS; j <= 0.0; ++j)  {
+        for (float i = 0.0; i <= KUWAHARA_RADIUS; ++i)  {
             #if defined(PLATFORM_WEBGL)
             if (i > radius)
                 break;
@@ -152,12 +150,12 @@ KUWAHARA_TYPE kuwahara(in SAMPLER_TYPE tex, in vec2 st, in vec2 pixel, in int ra
         }
     }
     
-    for (j = 0; j <= KUWAHARA_RADIUS; ++j)  {
+    for (float j = 0.0; j <= KUWAHARA_RADIUS; ++j)  {
         #if defined(PLATFORM_WEBGL)
         if (j > radius)
             break;
         #endif
-        for (i = 0; i <= KUWAHARA_RADIUS; ++i)  {
+        for (float i = 0.0; i <= KUWAHARA_RADIUS; ++i)  {
             #if defined(PLATFORM_WEBGL)
             if (i > radius)
                 break;
@@ -168,8 +166,8 @@ KUWAHARA_TYPE kuwahara(in SAMPLER_TYPE tex, in vec2 st, in vec2 pixel, in int ra
         }
     }
     
-    for (j = 0; j <= KUWAHARA_RADIUS; ++j)  {
-        for (i = -KUWAHARA_RADIUS; i <= 0; ++i)  {
+    for (float j = 0.0; j <= KUWAHARA_RADIUS; ++j)  {
+        for (float i = -KUWAHARA_RADIUS; i <= 0.0; ++i)  {
             c = KUWAHARA_SAMPLER_FNC(tex, st + vec2(i,j) * pixel);
             m3 += c;
             s3 += c * c;
