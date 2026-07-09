@@ -15,4 +15,8 @@ license:
 #define FNC_LAB2RGB
 float3 lab2rgb( float3 lab) { return xyz2rgb( lab2xyz( lab ) ); }
 float4 lab2rgb( float4 lab) { return float4(lab2rgb(lab.rgb), lab.a); }
+
+half3 lab2rgb( half3 lab) { return xyz2rgb( lab2xyz( lab ) ); }
+half4 lab2rgb( half4 lab) { return half4(lab2rgb(lab.rgb), lab.a); }
+
 #endif

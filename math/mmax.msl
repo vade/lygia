@@ -19,4 +19,12 @@ float mmax(const float2 v) { return max(v.x, v.y); }
 float mmax(const float3 v) { return mmax(v.x, v.y, v.z); }
 float mmax(const float4 v) { return mmax(v.x, v.y, v.z, v.w); }
 
+
+half mmax(half a, half b) { return max(a, b); }
+half mmax(half a, half b, half c) { return max(a, max(b, c)); }
+half mmax(half a, half b, half c, half d) { return max(max(a, b), max(c, d)); }
+half mmax(const half2 v) { return max(v.x, v.y); }
+half mmax(const half3 v) { return mmax(v.x, v.y, v.z); }
+half mmax(const half4 v) { return mmax(v.x, v.y, v.z, v.w); }
+
 #endif

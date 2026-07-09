@@ -19,4 +19,12 @@ float4 rgb2cmyk( float3 rgb) {
     cmy *= step(0.0, invK);
     return saturate(float4(cmy, k));
 }
+
+half4 rgb2cmyk( half3 rgb) {
+    half k = mmin(1.0 - rgb);
+    half invK = 1.0 - k;
+    half3 cmy = (1.0 - rgb - k) / invK;
+    cmy *= step( half(0.0), invK);
+    return saturate(half4(cmy, k));
+}
 #endif

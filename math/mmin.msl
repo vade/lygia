@@ -21,4 +21,14 @@ float mmin(const float2 v) { return min(v.x, v.y); }
 float mmin(const float3 v) { return mmin(v.x, v.y, v.z); }
 float mmin(const float4 v) { return mmin(v.x, v.y, v.z, v.w); }
 
+
+half mmin(const half v) { return v; }
+half mmin(half a, half b) { return min(a, b); }
+half mmin(half a, half b, half c) { return min(a, min(b, c)); }
+half mmin(half a, half b, half c, half d) { return min(min(a,b), min(c, d)); }
+
+half mmin(const half2 v) { return min(v.x, v.y); }
+half mmin(const half3 v) { return mmin(v.x, v.y, v.z); }
+half mmin(const half4 v) { return mmin(v.x, v.y, v.z, v.w); }
+
 #endif

@@ -15,8 +15,20 @@ constant matrix<float, 3, 3> RGB2YUV = matrix<float, 3, 3>(
     0.587, -0.28886, -0.51499,
     0.114,  0.436,   -0.10001
 );
+
+constant matrix<half, 3, 3> RGB2YUV_HALF = matrix<half, 3, 3>(
+    0.299, -0.14713,  0.615,
+    0.587, -0.28886, -0.51499,
+    0.114,  0.436,   -0.10001
+);
 #else
 constant matrix<float, 3, 3> RGB2YUV = matrix<float, 3, 3>(
+    0.2126,  -0.09991, 0.615,
+    0.7152,  -0.33609,-0.55861,
+    0.0722,   0.426,  -0.05639
+);
+
+constant matrix<half, 3, 3> RGB2YUV_HALF = matrix<half, 3, 3>(
     0.2126,  -0.09991, 0.615,
     0.7152,  -0.33609,-0.55861,
     0.0722,   0.426,  -0.05639
@@ -28,4 +40,7 @@ constant matrix<float, 3, 3> RGB2YUV = matrix<float, 3, 3>(
 #define FNC_RGB2YUV
 float3 rgb2yuv( float3 rgb) { return RGB2YUV * rgb; }
 float4 rgb2yuv( float4 rgb) { return float4(rgb2yuv(rgb.rgb),rgb.a); }
+half3 rgb2yuv( half3 rgb) { return RGB2YUV_HALF * rgb; }
+half4 rgb2yuv( half4 rgb) { return half4(rgb2yuv(rgb.rgb),rgb.a); }
+
 #endif

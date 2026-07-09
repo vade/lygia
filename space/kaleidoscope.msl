@@ -20,7 +20,7 @@ float2 kaleidoscope(float2 coord, float segmentCount, float phase) {
 #endif
     
     float radius = length(uv);
-    float angle = atan(uv.y, uv.x);
+    float angle = atan2(uv.y, uv.x);
     
     float segmentAngle = TWO_PI / segmentCount;
     angle -= segmentAngle * floor(angle / segmentAngle);

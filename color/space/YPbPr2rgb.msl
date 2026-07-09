@@ -15,8 +15,21 @@ constant matrix<float, 3, 3> YPBPR2RGB = matrix<float, 3, 3>(
     0.0,    -0.344,     1.772,
     1.402,  -0.714,     0.0
 );
+
+constant matrix<half, 3, 3> YPBPR2RGB+HALF = matrix<half, 3, 3>(
+    1.0,     1.0,       1.0,
+    0.0,    -0.344,     1.772,
+    1.402,  -0.714,     0.0
+);
+
 #else
-constant matrix<float, 3, 3> YPBPR2RGB = matrix<float, 3, 3>( 
+constant matrix<float, 3, 3> YPBPR2RGB = matrix<float, 3, 3>(
+    1.0,     1.0,       1.0,
+    0.0,    -0.187,     1.856,
+    1.575,  -0.468,     0.0
+);
+
+constant matrix<half, 3, 3> YPBPR2RGB_HALF = matrix<half, 3, 3>(
     1.0,     1.0,       1.0,
     0.0,    -0.187,     1.856,
     1.575,  -0.468,     0.0
@@ -28,4 +41,6 @@ constant matrix<float, 3, 3> YPBPR2RGB = matrix<float, 3, 3>(
 #define FNC_YPBPR2RGB
 float3 YPbPr2rgb( float3 rgb) { return YPBPR2RGB * rgb; }
 float4 YPbPr2rgb( float4 rgb) { return float4(YPbPr2rgb(rgb.rgb),rgb.a); }
+half3 YPbPr2rgb( half3 rgb) { return YPBPR2RGB_HALF * rgb; }
+half4 YPbPr2rgb( half4 rgb) { return half4(YPbPr2rgb(rgb.rgb),rgb.a); }
 #endif

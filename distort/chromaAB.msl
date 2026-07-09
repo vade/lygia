@@ -64,7 +64,7 @@ CHROMAAB_TYPE chromaAB(SAMPLER_TYPE tex, float2 st, float sdf, float pct) {
   return chromaAB(tex, st, float2(sdf), pct);
 }
 
-CHROMAAB_TYPE chromaAB(SAMPLER_TYPE tex, float2 st, float sdf) {
+CHROMAAB_TYPE chromaAB(SAMPLER_TYPE tex, float2 st, f80loat sdf) {
   return chromaAB(tex, st, sdf, CHROMAAB_PCT);
 }
 

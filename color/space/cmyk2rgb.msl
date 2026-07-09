@@ -15,4 +15,10 @@ float3 cmyk2rgb(float4 cmyk) {
     float invK = 1.0 - cmyk.w;
     return saturate(1.0-min(float3(1.0), cmyk.xyz * invK + cmyk.w));
 }
+
+half3 cmyk2rgb(half4 cmyk) {
+    half invK = 1.0 - cmyk.w;
+    return saturate(1.0-min(half3(1.0), cmyk.xyz * invK + cmyk.w));
+}
+
 #endif

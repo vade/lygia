@@ -16,8 +16,19 @@ license:
 // 1.0 / 12.92 = 0.0773993808
 // 1.0 / (1.0 + 0.055) = 0.947867298578199
 float srgb2rgb( float v) {   return (v < 0.04045) ? v * 0.0773993808 : pow((v + 0.055) * 0.947867298578199, 2.4); }
-float3 srgb2rgb( float3 srgb) {  return float3(   srgb2rgb(srgb.r + SRGB_EPSILON),
+
+float3 srgb2rgb( float3 srgb) {  return float3(     srgb2rgb(srgb.r + SRGB_EPSILON),
                                                     srgb2rgb(srgb.g + SRGB_EPSILON),
                                                     srgb2rgb(srgb.b + SRGB_EPSILON)); }
+                                                    
 float4 srgb2rgb( float4 srgb) {  return float4(   srgb2rgb(srgb.rgb), srgb.a); }
+
+half srgb2rgb( half v) {   return (v < 0.04045) ? v * 0.0773993808 : pow((v + 0.055) * 0.947867298578199, 2.4); }
+
+half3 srgb2rgb( half3 srgb) {  return half3(    srgb2rgb(srgb.r + SRGB_EPSILON),
+                                                srgb2rgb(srgb.g + SRGB_EPSILON),
+                                                srgb2rgb(srgb.b + SRGB_EPSILON)); }
+half4 srgb2rgb( half4 srgb) {  return half4(    srgb2rgb(srgb.rgb), srgb.a); }
+
+
 #endif
